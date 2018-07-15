@@ -1,0 +1,4 @@
+**/gen_*.go
+gosdf-convert
+generate
+sdformat

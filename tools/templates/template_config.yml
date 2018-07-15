@@ -1,0 +1,2 @@
+- template_file: sdf_type.tmpl
+  output_file: pkg/sdf/gen_types.go

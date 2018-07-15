@@ -1,0 +1,46 @@
+package sdf
+
+import(
+    "encoding/xml"
+)
+
+{%- macro yamlTags(type) -%}
+yaml:"{{type.Name}},omitempty"
+{%- endmacro -%}
+
+{%- macro xmlAttrTags(type) -%}
+xml:"{{type.Name}},attr,omitempty"
+{%- endmacro -%}
+
+{%- macro xmlTags(type) -%}
+xml:"{{type.Name}},omitempty"
+{%- endmacro -%}
+
+{% macro generateType(type) %}
+    XMLName xml.Name `yaml:"-" xml:"{{type.Name}}"`
+    {%- if type.XMLType == "SimpleWithAttribute"%}
+    {{type.GoName}} string `yaml:"{{type.Name}}" xml:",chardata"`
+    {%- endif %}
+    {%- for attr in type.Attributes %}
+        {{attr.GoName}} {{attr.GoType}} `{{- yamlTags(attr) }} {{ xmlAttrTags(attr) -}}`
+    {%- endfor %}
+    {%- for child in type.Children %}
+    {%- if child.Name != "" %}
+        {%- if child.Type == "" %}
+            {{child.GoName}} struct{
+                {{- generateType(child) -}}
+            } `{{- yamlTags(child) }} {{ xmlTags(child) -}}`
+        {%- else %}
+            {{child.GoName}} {{child.GoType}} `{{- yamlTags(child) }} {{ xmlTags(child) -}}`
+        {%- endif %}
+    {%- endif %}
+    {%- endfor %}
+{% endmacro %}
+
+
+{% for type in types %}
+// {{type.GoName}} generated from {{type.Filename}}
+type {{type.GoName}} struct {
+    {{- generateType(type) -}}
+}
+{% endfor %}
