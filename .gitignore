@@ -1,4 +1,4 @@
-**/gen_*.go
+**/gen_.*.go
 gosdf-convert
-generate
+gosdf-generate
 sdformat

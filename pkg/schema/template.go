@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	templateRoot = "tools/templates"
+	// TemplateRoot directory containing templates and default config
+	TemplateRoot = "tools/templates"
 )
 
 type templateConfig struct {
@@ -37,7 +38,7 @@ func loadConfig(path string) (config []*templateConfig, err error) {
 }
 
 func (c *templateConfig) applyTemplate(api *API) error {
-	t, err := pongo2.FromFile(filepath.Join(templateRoot, c.TemplateFilePath))
+	t, err := pongo2.FromFile(filepath.Join(TemplateRoot, c.TemplateFilePath))
 	if err != nil {
 		return err
 	}
