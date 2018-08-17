@@ -1,0 +1,523 @@
+<sdf version='1.5'>
+    <!--Model definition-->
+    <model name='WUThrust_VTOL'>
+        <!--Model position-->
+        <pose>0 0 0.5 0 0 0</pose>
+        <!--Fuselage-->
+        <link name='Fuselage_link'>
+            <pose>0 0 0 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>4</mass>
+                <inertia>
+                    <ixx>5.33416666667</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>1.33416666667</iyy>
+                    <iyz>0</iyz>
+                    <izz>6</izz>
+                </inertia>
+            </inertial>
+            <collision name='Fuselage_collision'>
+                <pose>0 0 -0.06 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>2 4 0.05</size>
+                    </box>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode>
+                            <max_vel>10</max_vel>
+                            <min_depth>0.01</min_depth>
+                        </ode>
+                    </contact>
+                    <!--<friction><ode/></friction>-->
+                </surface>
+            </collision>
+            <visual name='Fuselage_visual'>
+                <pose>0 0 0 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.4 0.15 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/DarkGrey</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <visual name='Wing_visual'>
+                <pose>-0.05 0 0.09 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.3 2.0 0.03</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/DarkGrey</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+            <self_collide>0</self_collide>
+        </link>
+        <!--IMU-->
+        <link name='IMU_link'>
+            <pose>0 0 0 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>0.1</mass>
+                <inertia>
+                    <ixx>1.66666666667e-06</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>1.66666666667e-06</iyy>
+                    <iyz>0</iyz>
+                    <izz>1.66666666667e-06</izz>
+                </inertia>
+            </inertial>
+            <visual name='Fuselage_visual'>
+                <pose>0 0 0 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.4 0.15 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/DarkGrey</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+        </link>
+        <!--IMU joint with main body.-->
+        <joint name='IMU_joint' type='revolute'>
+            <child>IMU_link</child>
+            <parent>Fuselage_link</parent>
+            <axis>
+                <xyz>1 0 0</xyz>
+                <limit>
+                    <lower>0</lower>
+                    <upper>0</upper>
+                    <effort>0</effort>
+                    <velocity>0</velocity>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+        </joint>
+        <!-- Right tilt mechanism -->
+        <link name='right_tilt_link'>
+            <pose>0 -1.025 0.09 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0.05 0 0 0</pose>
+                <mass>0.05</mass>
+                <inertia>
+                    <ixx>0.00108333333333</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.00108333333333</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.00208333333333</izz>
+                </inertia>
+            </inertial>
+            <collision name='right_tilt_collision'>
+                <pose>0 0 0.05 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.05 0.05 0.1</size>
+                    </box>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <friction>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='right_tilt_visual'>
+                <pose>0 0 0.05 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.05 0.05 0.1</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <visual name='right_motor_visual'>
+                <pose>0 -1.025 0.2075 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <length>0.035</length>
+                        <radius>0.02</radius>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Gold</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+            <self_collide>0</self_collide>
+        </link>
+        <!-- Right tilt mechanism joint-->
+        <joint name='right_tilt_joint' type='revolute'>
+            <parent>Fuselage_link</parent>
+            <child>right_tilt_link</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <lower>-0.87</lower>
+                    <upper>1.66</upper>
+                </limit>
+            </axis>
+        </joint>
+        <!-- Right drive -->
+        <link name='right_drive_link'>
+            <pose>0 -1.025 0.23 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>0.01</mass>
+                <inertia>
+                    <ixx>1.60833333333e-05</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>1.60833333333e-05</iyy>
+                    <iyz>0</iyz>
+                    <izz>3.2e-05</izz>
+                </inertia>
+            </inertial>
+            <collision name='right_drive_collision'>
+                <pose>0 0 0 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <length>0.01</length>
+                        <radius>0.08</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <friction>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='right_drive_visual'>
+                <pose>-0.2949 -0.2905 -0.102 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>2 2 2</scale>
+                        <uri>model://wut_vtol/meshes/solo_prop_ccw.stl</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Yellow</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+            <self_collide>0</self_collide>
+        </link>
+        <!-- Right drive joint-->
+        <joint name='right_drive_joint' type='revolute'>
+            <parent>right_tilt_link</parent>
+            <child>right_drive_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+        </joint>
+        <!-- Left tilt mechanism -->
+        <link name='left_tilt_link'>
+            <pose>0 1.025 0.09 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0.05 0 0 0</pose>
+                <mass>0.05</mass>
+                <inertia>
+                    <ixx>0.00108333333333</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.00108333333333</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.00208333333333</izz>
+                </inertia>
+            </inertial>
+            <collision name='left_tilt_collision'>
+                <pose>0 0 0.05 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.05 0.05 0.1</size>
+                    </box>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <friction>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='left_tilt_visual'>
+                <pose>0 0 0.05 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.05 0.05 0.1</size>
+                    </box>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <visual name='left_motor_visual'>
+                <pose>0 1.025 0.2075 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <length>0.035</length>
+                        <radius>0.02</radius>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Gold</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+            <self_collide>0</self_collide>
+        </link>
+        <!-- Left tilt mechanism joint-->
+        <joint name='left_tilt_joint' type='revolute'>
+            <parent>Fuselage_link</parent>
+            <child>left_tilt_link</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <limit>
+                    <lower>-0.87</lower>
+                    <upper>1.66</upper>
+                </limit>
+            </axis>
+        </joint>
+        <!-- Left drive -->
+        <link name='left_drive_link'>
+            <pose>0 1.025 0.23 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>0.01</mass>
+                <inertia>
+                    <ixx>1.60833333333e-05</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>1.60833333333e-05</iyy>
+                    <iyz>0</iyz>
+                    <izz>3.2e-05</izz>
+                </inertia>
+            </inertial>
+            <collision name='left_drive_collision'>
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <length>0.01</length>
+                        <radius>0.08</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode/>
+                    </contact>
+                    <friction>
+                        <ode/>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='left_drive_visual'>
+                <pose>-0.2949 0.2905 -0.102 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>2 2 2</scale>
+                        <uri>model://wut_vtol/meshes/solo_prop_cw.stl</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Yellow</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+            <self_collide>0</self_collide>
+        </link>
+        <!-- Left drive joint-->
+        <joint name='left_drive_joint' type='revolute'>
+            <parent>left_tilt_link</parent>
+            <child>left_drive_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <spring_reference>0</spring_reference>
+                    <spring_stiffness>0</spring_stiffness>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+        </joint>
+        <!-- IMU plugin-->
+        <plugin name='rotors_gazebo_imu_plugin' filename='librotors_gazebo_imu_plugin.so'>
+            <robotNamespace></robotNamespace>
+            <linkName>IMU_link</linkName>
+            <imuTopic>/imu</imuTopic>
+            <gyroscopeNoiseDensity>0.0003394</gyroscopeNoiseDensity>
+            <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
+            <gyroscopeBiasCorrelationTime>1000.0</gyroscopeBiasCorrelationTime>
+            <gyroscopeTurnOnBiasSigma>0.0087</gyroscopeTurnOnBiasSigma>
+            <accelerometerNoiseDensity>0.004</accelerometerNoiseDensity>
+            <accelerometerRandomWalk>0.006</accelerometerRandomWalk>
+            <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
+            <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
+        </plugin>
+        <!-- Right drive plugin-->
+        <plugin name='right_drive_model' filename='librotors_gazebo_motor_model.so'>
+            <robotNamespace></robotNamespace>
+            <jointName>right_drive_joint</jointName>
+            <linkName>right_drive_link</linkName>
+            <turningDirection>ccw</turningDirection>
+            <timeConstantUp>0.0125</timeConstantUp>
+            <timeConstantDown>0.025</timeConstantDown>
+            <maxRotVelocity>1500</maxRotVelocity>
+            <motorConstant>0.000806428</motorConstant>
+            <momentConstant>0.06</momentConstant>
+            <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+            <motorNumber>1</motorNumber>
+            <rotorDragCoefficient>0.000806428</rotorDragCoefficient>
+            <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+            <motorSpeedPubTopic>/motor_speed/1</motorSpeedPubTopic>
+            <rotorVelocitySlowdownSim>50</rotorVelocitySlowdownSim>
+        </plugin>
+        <!-- Left drive plugin-->
+        <plugin name='left_drive_model' filename='librotors_gazebo_motor_model.so'>
+            <robotNamespace></robotNamespace>
+            <jointName>left_drive_joint</jointName>
+            <linkName>left_drive_link</linkName>
+            <turningDirection>cw</turningDirection>
+            <timeConstantUp>0.0125</timeConstantUp>
+            <timeConstantDown>0.025</timeConstantDown>
+            <maxRotVelocity>1500</maxRotVelocity>
+            <motorConstant>0.000806428</motorConstant>
+            <momentConstant>0.01</momentConstant>
+            <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+            <motorNumber>0</motorNumber>
+            <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+            <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+            <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
+            <rotorVelocitySlowdownSim>50</rotorVelocitySlowdownSim>
+        </plugin>
+        <!-- Mavlink interface plugin-->
+        <plugin name='mavlink_interface' filename='librotors_gazebo_mavlink_interface.so'>
+            <robotNamespace></robotNamespace>
+            <imuSubTopic>/imu</imuSubTopic>
+            <motorSpeedCommandPubTopic>/gazebo/command/motor_speed</motorSpeedCommandPubTopic>
+            <control_channels>
+                <channel name="right_tilt_link">
+                    <input_index>3</input_index>
+                    <input_offset>0</input_offset>
+                    <input_scaling>2.36</input_scaling>
+                    <zero_position_disarmed>0</zero_position_disarmed>
+                    <zero_position_armed>-1.18</zero_position_armed>
+                    <joint_control_type>position</joint_control_type>
+                    <joint_name>right_tilt_joint</joint_name>
+                    <joint_control_pid>
+                        <p>0.5</p>
+                        <i>0.1</i>
+                        <d>0.1</d>
+                        <iMax>4</iMax>
+                        <iMin>-4</iMin>
+                        <cmdMax>20</cmdMax>
+                        <cmdMin>-20</cmdMin>
+                    </joint_control_pid>
+                </channel>
+                <channel name="left_tilt_link">
+                    <input_index>2</input_index>
+                    <input_offset>0</input_offset>
+                    <input_scaling>2.36</input_scaling>
+                    <zero_position_disarmed>0</zero_position_disarmed>
+                    <zero_position_armed>-1.18</zero_position_armed>
+                    <joint_control_type>position</joint_control_type>
+                    <joint_name>left_tilt_joint</joint_name>
+                    <joint_control_pid>
+                        <p>0.5</p>
+                        <i>0.1</i>
+                        <d>0.1</d>
+                        <iMax>4</iMax>
+                        <iMin>-4</iMin>
+                        <cmdMax>20</cmdMax>
+                        <cmdMin>-20</cmdMin>
+                    </joint_control_pid>
+                </channel>
+                <channel name="left_drive_link">
+                    <input_index>0</input_index>
+                    <input_offset>0</input_offset>
+                    <input_scaling>500</input_scaling>
+                    <zero_position_disarmed>0</zero_position_disarmed>
+                    <zero_position_armed>0</zero_position_armed>
+                    <joint_control_type>velocity</joint_control_type>
+                    <joint_name>left_drive_joint</joint_name>
+                </channel>
+                <channel name="right_drive_link">
+                    <input_index>1</input_index>
+                    <input_offset>0</input_offset>
+                    <input_scaling>500</input_scaling>
+                    <zero_position_disarmed>0</zero_position_disarmed>
+                    <zero_position_armed>0</zero_position_armed>
+                    <joint_control_type>velocity</joint_control_type>
+                    <joint_name>right_drive_joint</joint_name>
+                </channel>
+            </control_channels>
+        </plugin>
+        <static>0</static>
+    </model>
+</sdf>

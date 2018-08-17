@@ -48,6 +48,7 @@ type Element struct {
 	Includes    []*Include `xml:"include"`
 	Description string     `xml:"description"`
 	Filename    string     `xml:"-"`
+	CopyData    bool       `xml:"copy_data,attr"`
 }
 
 // Include represents sdf schema import
@@ -92,16 +93,25 @@ func (e *Element) resolveIncludes(api *API) error {
 	return nil
 }
 
-func (e *Element) resolveGoNames() {
+func (e *Element) resolveGoName() {
+	if e.CopyData {
+		e.GoName = "copyData"
+		return
+	}
+
 	if e.ID != "" {
 		e.GoName = strmangle.TitleCase(e.ID)
-	} else {
-		e.GoName = strmangle.TitleCase(e.Name)
+		return
 	}
+
+	e.GoName = strmangle.TitleCase(e.Name)
+}
+
+func (e *Element) resolveGoNames() {
+	e.resolveGoName()
 
 	for _, c := range e.Children {
 		c.resolveGoNames()
-
 	}
 	for _, a := range e.Attributes {
 		a.resolveGoNames()
@@ -109,14 +119,20 @@ func (e *Element) resolveGoNames() {
 }
 
 func (e *Element) resolveXMLType() {
+	if e.CopyData {
+		e.XMLType = "CopyData"
+		return
+	}
 	if len(e.Attributes)+len(e.Children)+len(e.Includes) == 0 {
 		e.XMLType = "Simple"
+		return
 	}
 	if len(e.Children)+len(e.Includes) != 0 {
 		e.XMLType = "Complex"
-	} else {
-		e.XMLType = "SimpleWithAttribute"
+		return
 	}
+
+	e.XMLType = "SimpleWithAttribute"
 }
 
 func (e *Element) resolveGoTypes(api *API) error {
@@ -141,6 +157,10 @@ func (e *Element) resolveGoTypes(api *API) error {
 	}
 	if e.Required == "*" {
 		e.GoType = "[]" + e.GoType
+	}
+
+	if e.CopyData {
+		e.GoType = "[]interface{}"
 	}
 	for _, c := range e.Children {
 		err := c.resolveGoTypes(api)

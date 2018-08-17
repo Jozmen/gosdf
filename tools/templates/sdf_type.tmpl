@@ -5,33 +5,37 @@ import(
 )
 
 {%- macro yamlTags(type) -%}
-yaml:"{{type.Name}},omitempty"
+yaml:"{{ type.Name }},omitempty"
 {%- endmacro -%}
 
 {%- macro xmlAttrTags(type) -%}
-xml:"{{type.Name}},attr,omitempty"
+xml:"{{ type.Name }},attr,omitempty"
 {%- endmacro -%}
 
 {%- macro xmlTags(type) -%}
-xml:"{{type.Name}},omitempty"
+xml:"{{ type.Name }},omitempty"
 {%- endmacro -%}
 
 {% macro generateType(type) %}
-    XMLName xml.Name `yaml:"-" xml:"{{type.Name}}"`
-    {%- if type.XMLType == "SimpleWithAttribute"%}
-    {{type.GoName}} string `yaml:"{{type.Name}}" xml:",chardata"`
+    // {{type.XMLType}}
+    XMLName xml.Name `yaml:"-" xml:"{{ type.Name }}"`
+    {%- if type.XMLType == "SimpleWithAttribute" %}
+    {{ type.GoName }} string `yaml:"{{ type.Name }}" xml:",chardata"`
     {%- endif %}
     {%- for attr in type.Attributes %}
-        {{attr.GoName}} {{attr.GoType}} `{{- yamlTags(attr) }} {{ xmlAttrTags(attr) -}}`
+        {{ attr.GoName }} {{ attr.GoType }} `{{- yamlTags(attr) }} {{ xmlAttrTags(attr) -}}`
     {%- endfor %}
     {%- for child in type.Children %}
+    {%- if child.XMLType == "CopyData" %}
+    {{ child.GoName }} {{ child.GoType }}
+    {%- endif %}
     {%- if child.Name != "" %}
         {%- if child.Type == "" %}
-            {{child.GoName}} struct{
+            {{ child.GoName }} struct{
                 {{- generateType(child) -}}
             } `{{- yamlTags(child) }} {{ xmlTags(child) -}}`
         {%- else %}
-            {{child.GoName}} {{child.GoType}} `{{- yamlTags(child) }} {{ xmlTags(child) -}}`
+            {{ child.GoName }} {{ child.GoType }} `{{- yamlTags(child) }} {{ xmlTags(child) -}}`
         {%- endif %}
     {%- endif %}
     {%- endfor %}
@@ -39,8 +43,8 @@ xml:"{{type.Name}},omitempty"
 
 
 {% for type in types %}
-// {{type.GoName}} generated from {{type.Filename}}
-type {{type.GoName}} struct {
+// {{ type.GoName }} generated from {{ type.Filename }}
+type {{ type.GoName }} struct {
     {{- generateType(type) -}}
 }
 {% endfor %}
